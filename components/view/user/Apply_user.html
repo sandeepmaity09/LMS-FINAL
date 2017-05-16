@@ -176,6 +176,8 @@
 				 								 <input id="reason" type="text" class="form-control" >
 				 							 </div>
 				 						</div>
+                                         
+
                                          <div class="col-md-4">
 				 							 <div class="form-group label-floating">
                                                   <select id="typess" name="typess" class="form-control" style="width: 300px; height: 30px;">
@@ -183,10 +185,12 @@
                                                         <option value="cl">CL (Casual Leave)</option>
                                                         <option value="pl">PL (Personal Leave)</option>
                                                         <option value="sl">SL (Sick Leave)</option>
-                                                        <option value="ml" id="maternity-leave-show">ML (Maternity Leave)</option>
+                                                        <option value="ml" id="maternity-leave-show"></option>
                                                     </select>
 				 							 </div>
 				 						</div>
+
+
 				 					</div>
 								</div>
 								<div id="result"></div>
@@ -224,15 +228,15 @@
 	<script type="text/javascript">
 
 	$(document).ready(function(){
-		console.log("faltu ka kaam");
+		// console.log("faltu ka kaam");
 			var user = localStorage.getItem("user_id");
 
 			$.ajax({
 				type:"GET",
 				url:"http://139.59.3.86:3000/getUserDetails?id="+user,
 				success:function(data){
-					console.log("success");
-					console.log(data);
+					// console.log("success");
+					// console.log(data);
 
 					$('#dept-name').val(data.department);
 					$('#username').val(data.displayName);
@@ -306,21 +310,21 @@
 		
 		$("#tnd").text(tnd);
 			
-			console.log("dept "+deptName);
-			console.log("user "+userId);
-			console.log("start "+startDate);
-			console.log("end "+endDate);
-			console.log("tnd "+days);
-			console.log("reason "+reason);
-			console.log("type "+typess);
-			console.log("diff "+days);
+			// console.log("dept "+deptName);
+			// console.log("user "+userId);
+			// console.log("start "+startDate);
+			// console.log("end "+endDate);
+			// console.log("tnd "+days);
+			// console.log("reason "+reason);
+			// console.log("type "+typess);
+			// console.log("diff "+days);
 			
 			var user = localStorage.getItem("user_id");
 			
-			console.log("user_id "+user);
+			// console.log("user_id "+user);
 
-			$.post("http://139.59.3.86:3000/applyLeave?user="+user+"&"+"reason="+reason+"&"+"type="+typess+"&"+"days="+days,function(data){
-				console.log(data);
+			$.post("http://139.59.3.86:3000/applyLeave?user="+user+"&"+"reason="+reason+"&"+"type="+typess+"&"+"days="+days+"&"+"&"+"startDate="+startDate+"&"+"endDate="+endDate,function(data){
+				// console.log(data);
 				alert("Leave Applied");
 				window.location.href = "index_user.html";
 			});
@@ -329,18 +333,27 @@
 
 		function showMaternity(){
 			var user = localStorage.getItem("user_id");
-			var outData;
-			$.post("http://139.59.3.86:3000/getUserDetails?id="+user,function(data){
+			$.get("http://139.59.3.86:3000/getUserDetails?id="+user,function(data){
 				console.log(data);
-				outData = data;
+
+				if(data.gender == "Male"){
+					$("#maternity-leave-show").text("PaL (Paternal Leave)");
+				}
+				else if(data.gender == "Female")
+				{
+					$("#maternity-leave-show").text("MaL (Maternity Leave");
+				}
+				// outData = data;
 			});
+			// console.log(outData);
+			// console.log(outData);
 		}
 
 		$("#leave-button").on("click",function(){
 			showData();
 		});
 
-		$("#maternity-leave-show").on("click",function(){
+		$("#typess").change(function(){
 			showMaternity();
 		});
 	</script>
